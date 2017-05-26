@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">sample</string>
+    <string name="action_settings">Settings</string>
+    <string name="download_failed">Download Failed</string>
+    <string name="download_done">Downloaded</string>
+    <string name="snackbar_download_not_started">Download not started</string>
+</resources>
