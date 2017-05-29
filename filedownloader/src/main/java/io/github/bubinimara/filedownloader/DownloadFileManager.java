@@ -1,6 +1,5 @@
 package io.github.bubinimara.filedownloader;
 
-import android.Manifest;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
@@ -10,7 +9,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresPermission;
 import android.support.v4.content.LocalBroadcastManager;
 
 import java.io.File;
@@ -131,7 +129,7 @@ public class DownloadFileManager {
                 if (c.moveToFirst()) {
                     int columnIndex = c.getColumnIndex(DownloadManager.COLUMN_STATUS);
                     if (DownloadManager.STATUS_SUCCESSFUL == c.getInt(columnIndex)) {
-                        startInstallActivity(context, (downloadInfo.getUri()), dm.getMimeTypeForDownloadedFile(downloadId));
+                        openDownloadedFile(context, (downloadInfo.getUri()), dm.getMimeTypeForDownloadedFile(downloadId));
                         LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent(ACTION_DONE));
                     } else {
                         // stop to automatically download
@@ -148,7 +146,13 @@ public class DownloadFileManager {
         }
     }
 
-    private static void startInstallActivity(@NonNull Context context, Uri uri, String mimeType) {
+    /**
+     * Open the downloaded file
+     * @param context the application contex
+     * @param uri the file uri
+     * @param mimeType the mime type
+     */
+    private static void openDownloadedFile(@NonNull Context context, Uri uri, String mimeType) {
         try {
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -157,7 +161,14 @@ public class DownloadFileManager {
             context.startActivity(intent);
         } catch (Exception e) {
             e.printStackTrace();
+            openDownloadedFolder(context);
         }
+    }
+
+    private static void openDownloadedFolder(@NonNull Context context){
+        Intent intent = new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
     }
     /**
      * File creation
