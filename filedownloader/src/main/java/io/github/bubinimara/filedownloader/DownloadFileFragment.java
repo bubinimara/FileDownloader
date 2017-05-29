@@ -33,13 +33,10 @@ public class DownloadFileFragment extends Fragment {
     private BroadcastReceiver downloadReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if(listener == null)
-                return; // sanity check
-
             if(DownloadFileManager.hasError(intent)){
-                listener.onDownloadFail(url,ERROR_DOWNLOAD_FAIL);
+                onDownloadFail(url,ERROR_DOWNLOAD_FAIL);
             }else {
-                listener.onDownloadDone(url);
+                onDownloadDone(url);
             }
         }
     };
@@ -53,8 +50,6 @@ public class DownloadFileFragment extends Fragment {
         super.onAttach(context);
         if(context instanceof DownloadFileListener){
             listener = (DownloadFileListener) context;
-        }else if (getTargetFragment() instanceof DownloadFileListener){
-            listener = (DownloadFileListener) getTargetFragment();
         }
     }
 
@@ -111,7 +106,7 @@ public class DownloadFileFragment extends Fragment {
 
         if(!DownloadFileManager.downloadFile(getContext(),url)){
             // listener download error
-            listener.onDownloadFail(url,ERROR_DOWNLOAD_NOT_STARTED);
+            onDownloadFail(url,ERROR_DOWNLOAD_NOT_STARTED);
         }
     }
 
@@ -123,7 +118,7 @@ public class DownloadFileFragment extends Fragment {
                 //you have the permission now.
                 downloadFile();
             }else{
-                listener.onDownloadFail(url,ERROR_PERMISSION_NOT_GRANTED);
+                onDownloadFail(url,ERROR_PERMISSION_NOT_GRANTED);
             }
         }
     }
@@ -140,4 +135,15 @@ public class DownloadFileFragment extends Fragment {
         return true;
     }
 
+    protected void onDownloadFail(String url,int error){
+        if(listener!=null){
+            listener.onDownloadFail(url,error);
+        }
+    }
+    protected void onDownloadDone(String url){
+        if(listener!=null){
+            listener.onDownloadDone(url);
+        }
+
+    }
 }

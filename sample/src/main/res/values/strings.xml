@@ -4,4 +4,7 @@
     <string name="download_failed">Download Failed</string>
     <string name="download_done">Downloaded</string>
     <string name="snackbar_download_not_started">Download not started</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="dialog_ok">Ok</string>
+    <string name="error_dialog_download">An error occur while download the file</string>
 </resources>
